@@ -33,8 +33,10 @@ HEADERS += \
         mainwindow.h \
     page.h \
 
+
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    chatmainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

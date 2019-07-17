@@ -4,13 +4,13 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QSizePolicy>
-#include "loginui.h"
-#include "register.h"
-#include "chatmainwindow2.h"
 #include <QStackedWidget>
 #include <QPushButton>
 #include <QSpinBox>
-#include<QtWebSockets/QWebSocket>
+#include <QtWebSockets/QWebSocket>
+#include <QLineEdit>
+#include <QLabel>
+
 
 namespace Ui {
 class MainWindow;
@@ -38,7 +38,6 @@ private slots:
     void nextRegisterPage();
     void userRegister();
 private:
-    ChatMainWindow *chatMainWindow;
     bool isLogin();
     Ui::MainWindow *ui;
     int page = 0;
@@ -50,7 +49,6 @@ private:
     void updateSuccessStatus(int);
     QWebSocket *webSocket;
     QWidget *centralWidget;
-    LoginUI *loginUI;
     QStackedWidget *stackedWidget;
     QPushButton *loginButton;
     QPushButton *showRegisterPageButton;

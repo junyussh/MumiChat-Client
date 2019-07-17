@@ -13,10 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     webSocket = new QWebSocket();
-    connect(webSocket, &QWebSocket::connected, this, &MainWindow::onConnected);
-    connect(webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onConnectError(QAbstractSocket::SocketError)));
     ui->setupUi(this);
     centralWidget = new QWidget(this);
+    connect(webSocket, &QWebSocket::connected, this, &MainWindow::onConnected);
+    connect(webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onConnectError(QAbstractSocket::SocketError)));
 
     stackedWidget = new QStackedWidget;
 
@@ -211,9 +211,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     /* 6. 聊天室窗口 */
-    chatMainWindow = new ChatMainWindow;
+//    chatMainWindow = new ChatMainWindow;
 //    connect(chatMainWindow, SIGNAL(rejected()), this, SLOT(show()));
-    stackedWidget->addWidget(chatMainWindow);
+//    stackedWidget->addWidget(chatMainWindow);
 
 
     // StackedWidget 的容器
@@ -421,7 +421,7 @@ void MainWindow::establishConnection()
 void MainWindow::showChatWindow()
 {
     this->hide();
-    chatMainWindow->show();
+//    chatMainWindow->show();
 }
 void MainWindow::nextPage()
 {
