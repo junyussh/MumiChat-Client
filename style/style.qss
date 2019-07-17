@@ -1,0 +1,57 @@
+QWidget {
+    background-color: #fff;
+    font-family: "Microsoft YaHei";
+}
+
+QPushButton {
+    /* background-color: rgb(40, 167, 252);
+    color: white;
+    border-radius: .28em;
+    border: 0;
+    padding: 10px; */
+    border-color: #00ADEA;
+    background: #00ADEA;
+    color: #fff;
+    padding: .78571em 1.5em;
+    border-radius: .28571rem;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 1.2142em;
+    border-width: 1px;
+    border-style: solid;
+    /* border-style: outset; */
+}
+
+QPushButton:hover {
+    /* background-color: rgb(109, 197, 255); */
+    background: #0092CB;
+    color: #ebebeb;
+    /* color: black; */
+}
+
+QPushButton:pressed {
+    background: #005A8B;
+    color: #ebebeb;
+    /* background-color: rgb(17, 136, 255); */
+    /* border-style: inset; */
+}
+
+
+QLineEdit, QSpinBox {
+    line-height: 1.2142em;
+    border: 1px solid #e9e9e9;
+    padding: .78571em 1em;
+    border-radius: .28571rem;
+    color: #646464;
+    background: #fff;
+    border-color: #e9e9e9;
+}
+
+QLineEdit, QSpinBox:hover {
+    border-color: #ccc !important;
+}
+
+QLineEdit, QSpinBox:focus {
+    border-color: #66afe9;
+    border-bottom-color: #66afe9;
+}
