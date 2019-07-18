@@ -10,6 +10,9 @@
 #include <QtWebSockets/QWebSocket>
 #include <QLineEdit>
 #include <QLabel>
+#include "chatmainwindow.h"
+#include "chatmessage.h"
+#include "simplechat.h"
 
 
 namespace Ui {
@@ -68,6 +71,9 @@ private:
     QLineEdit *ip;
     QLineEdit *port;
     QLineEdit *reg_email, *reg_password, *reg_con_password, *firstName, *lastName;
+    /* chat window */
+    CHATMainWindow *chatMainWindow;
+    SimpleChat *simpleChat;
 };
 
 #endif // MAINWINDOW_H

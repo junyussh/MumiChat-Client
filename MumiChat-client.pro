@@ -28,15 +28,28 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     page.cpp \
+    chatmainwindow.cpp \
+    chatmessage.cpp \
+    mylabel.cpp \
+    simplechat.cpp \
+    itemdelegate.cpp
 
 HEADERS += \
         mainwindow.h \
     page.h \
+    chatmainwindow.h \
+    chatmessage.h \
+    mylabel.h \
+    simplechat.h \
+    itemdelegate.h \
+    itemdef.h
 
 
 FORMS += \
         mainwindow.ui \
-    chatmainwindow.ui
+    chatmainwindow.ui \
+    chatmainwindow.ui \
+    simplechat.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -44,4 +57,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    resources.qrc
+    resources.qrc \
+    icon.qrc \
+    qss.qrc

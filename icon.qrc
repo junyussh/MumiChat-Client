@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>icon/LLK.png</file>
+        <file>icon/settings.png</file>
+        <file>icon/close.png</file>
+        <file>icon/min.png</file>
+        <file>icon/settings_black.png</file>
+        <file>icon/success.png</file>
+        <file>icon/error.png</file>
+        <file>icon/max.png</file>
+        <file>icon/loading.gif</file>
+        <file>icon/scroll/1.png</file>
+        <file>icon/scroll/2.png</file>
+        <file>icon/scroll/3.png</file>
+        <file>icon/scroll/4.png</file>
+        <file>icon/scroll/addpage.png</file>
+        <file>icon/scroll/subpage.png</file>
+        <file>icon/scroll/tiao.png</file>
+        <file>icon/link.png</file>
+        <file>icon/CustomerCopy.png</file>
+        <file>icon/loading4.gif</file>
+        <file>icon/menu_showFriend.png</file>
+        <file>icon/Setting_after_clicked.png</file>
+        <file>icon/Setting_before_clicked.png</file>
+        <file>icon/background/default_1.jpg</file>
+        <file>icon/background/default_2.jpg</file>
+        <file>icon/background/default_3.png</file>
+        <file>icon/menu1.png</file>
+        <file>icon/menu2.png</file>
+    </qresource>
+</RCC>

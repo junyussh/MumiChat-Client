@@ -211,9 +211,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     /* 6. 聊天室窗口 */
+//    chatMainWindow = new CHATMainWindow;
+    simpleChat = new SimpleChat;
+    simpleChat->setSocket(webSocket);
 //    chatMainWindow = new ChatMainWindow;
 //    connect(chatMainWindow, SIGNAL(rejected()), this, SLOT(show()));
-//    stackedWidget->addWidget(chatMainWindow);
+    stackedWidget->addWidget(simpleChat);
 
 
     // StackedWidget 的容器
@@ -363,6 +366,8 @@ void MainWindow::onTextMessageReceived(QString data)
             {
                 /* 查詢使用者成功 */
                 QJsonArray users = json["data"].toArray();
+                simpleChat->FriendList(users);
+
             } else
             {
                 /* 登入註冊成功 */
