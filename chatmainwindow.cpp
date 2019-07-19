@@ -133,7 +133,83 @@ void CHATMainWindow::resizeEvent(QResizeEvent *event)
         dealMessage(messageW, item, messageW->text(), messageW->time(), messageW->userType());
     }
 }
+void CHATMainWindow::getMessage(QString currentUser, QString selectUser)
+{
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("chat.db");
+    if( !db.open() )
+    {
+        qDebug() << db.lastError();
+        qFatal( "Failed to connect." );
+    }
+    qDebug( "Connected!" );
+    QString sql = QString("select * from message where sender=%1 or recipient=%2")
+            .arg(currentUser);
 
+}
+void CHATMainWindow::drawMessage(QString msg, QString isotime, bool isMe)
+{
+    // 去 ctrl 和 \n
+    //tempMSG += " ";
+    string tempMSG = msg.toStdString();
+    tempMSG.erase(tempMSG.end() - 1);
+    tempMSG.erase(tempMSG.end() - 1);
+
+    QString time;
+    if(isotime=="")
+        time = QDateTime::currentDateTime().toTime_t();
+    else
+        time = QString::number(QDateTime::fromString(QString(isotime), Qt::ISODate).toTime_t()); //時間截
+
+    qDebug() << "addMessage" << msg << time << ui->listWidget->count();
+    if (isMe)
+    {
+        if (isSending)
+        {
+            dealMessageTime(time);
+
+            QNChatMessage *messageW = new QNChatMessage(ui->listWidget->parentWidget());
+            QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+            dealMessage(messageW, item, msg, time, QNChatMessage::User_Me);
+        }
+        else
+        {
+            bool isOver = true;
+            // 處理輸入文字
+            for (int i = ui->listWidget->count() - 1; i > 0; i--)
+            {
+                QNChatMessage *messageW = (QNChatMessage *)ui->listWidget->itemWidget(ui->listWidget->item(i));
+                if (messageW->text() == msg)
+                {
+                    isOver = false;
+                    messageW->setTextSuccess();
+                }
+            }
+            // 處理時間文字
+            if (isOver)
+            {
+                dealMessageTime(time);
+
+                QNChatMessage *messageW = new QNChatMessage(ui->listWidget->parentWidget());
+                QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+                dealMessage(messageW, item, msg, time, QNChatMessage::User_Me);
+                messageW->setTextSuccess();
+            }
+        }
+    }
+    else
+    {
+        if (msg != "")
+        {
+            dealMessageTime(time);
+
+            QNChatMessage *messageW = new QNChatMessage(ui->listWidget->parentWidget());
+            QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
+            dealMessage(messageW, item, msg, time, QNChatMessage::User_She);
+        }
+    }
+    ui->listWidget->setCurrentRow(ui->listWidget->count() - 1);
+}
 // 輸出訊息
 void CHATMainWindow::keyPressEvent(QKeyEvent *event)
 {
@@ -141,66 +217,12 @@ void CHATMainWindow::keyPressEvent(QKeyEvent *event)
     //ctrl + Enter键
     if (event->modifiers() == Qt::ControlModifier && (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter))
     {
-        ui->label_tip->setVisible(false);
-        QString msg = ui->textEdit->toPlainText();
-        string tempMSG = msg.toStdString();
-        // 去 ctrl 和 \n
-        //tempMSG += " ";
-        tempMSG.erase(tempMSG.end() - 1);
-        tempMSG.erase(tempMSG.end() - 1);
-        ui->textEdit->setText("");
-        QString time = QString::number(QDateTime::currentDateTime().toTime_t()); //時間截
-
-        bool isSending = true; // 發送中
-
-        qDebug() << "addMessage" << msg << time << ui->listWidget->count();
-        if (ui->listWidget->count() % 2)
-        {
-            if (isSending)
-            {
-                dealMessageTime(time);
-
-                QNChatMessage *messageW = new QNChatMessage(ui->listWidget->parentWidget());
-                QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
-                dealMessage(messageW, item, msg, time, QNChatMessage::User_Me);
-            }
-            else
-            {
-                bool isOver = true;
-                // 處理輸入文字
-                for (int i = ui->listWidget->count() - 1; i > 0; i--)
-                {
-                    QNChatMessage *messageW = (QNChatMessage *)ui->listWidget->itemWidget(ui->listWidget->item(i));
-                    if (messageW->text() == msg)
-                    {
-                        isOver = false;
-                        messageW->setTextSuccess();
-                    }
-                }
-                // 處理時間文字
-                if (isOver)
-                {
-                    dealMessageTime(time);
-
-                    QNChatMessage *messageW = new QNChatMessage(ui->listWidget->parentWidget());
-                    QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
-                    dealMessage(messageW, item, msg, time, QNChatMessage::User_Me);
-                    messageW->setTextSuccess();
-                }
-            }
-        }
-        else
-        {
-            if (msg != "")
-            {
-                dealMessageTime(time);
-
-                QNChatMessage *messageW = new QNChatMessage(ui->listWidget->parentWidget());
-                QListWidgetItem *item = new QListWidgetItem(ui->listWidget);
-                dealMessage(messageW, item, msg, time, QNChatMessage::User_She);
-            }
-        }
-        ui->listWidget->setCurrentRow(ui->listWidget->count() - 1);
+        drawMessage(ui->textEdit->toPlainText(), "", true);
+        emit(sendMessage(ui->textEdit->toPlainText()));
+        ui->textEdit->clear();
     }
 }
-
+void CHATMainWindow::clearMessage()
+{
+    ui->listWidget->clear();
+}

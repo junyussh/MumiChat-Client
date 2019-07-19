@@ -12,7 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    setWindowTitle("MumiChat");
+    /* 新建 websocket 連線 */
     webSocket = new QWebSocket();
+    /* 新建 sqlite */
+    initDatabase();
+
     ui->setupUi(this);
     centralWidget = new QWidget(this);
     connect(webSocket, &QWebSocket::connected, this, &MainWindow::onConnected);
@@ -224,10 +229,41 @@ MainWindow::MainWindow(QWidget *parent) :
     full->addWidget(stackedWidget);
     this->setCentralWidget(centralWidget);
 }
-bool MainWindow::isLogin()
+/* 資料庫初始化 */
+void MainWindow::initDatabase()
 {
-    return false;
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("chat.db");
+    if( !db.open() )
+    {
+        qDebug() << db.lastError();
+        qFatal( "Failed to connect." );
+    }
+    qDebug( "Connected!" );
+    // sql 語句
+    QString sql("CREATE TABLE message("
+        "sender text not null, "
+        "recipient text not null, "
+        "content text not null, "
+        "created_at text not null)");
+    // 建立表(table)查詢
+    QSqlQuery creatTableQuery(db);
+    creatTableQuery.exec(sql);
 }
+/* 把收到的訊息存入資料庫 */
+void MainWindow::writeDatabase(QJsonObject message)
+{
+    QSqlQuery insertQuery(db);
+    QString sql = QString("INSERT INTO message(sender, recipient, content, created_at) VALUES ('%1', '%2', '%3', '%4')")
+            .arg(message["sender"].toString())
+            .arg(message["recipient"].toString())
+            .arg(message["content"].toString())
+            .arg(message["created_at"].toString());
+    qDebug() << message["created_at"].toString();
+    qDebug() << sql;
+    insertQuery.exec(sql);
+}
+
 /* 註冊頁面換下一頁 */
 void MainWindow::nextRegisterPage()
 {
@@ -266,7 +302,7 @@ void MainWindow::userRegister()
         json["data"] = data;
         QJsonDocument doc(json);
         qDebug() << "login";
-        qDebug() << doc.toJson();
+//        qDebug() << doc.toJson();
         webSocket->sendTextMessage(doc.toJson());
     }
 }
@@ -309,7 +345,8 @@ void MainWindow::updateSuccessStatus(int code)
         /* 跳到聊天界面 */
         this->stackedWidget->setCurrentIndex(5);
         page = 5;
-        qDebug("login success");
+        isLogin = true;
+        simpleChat->setLoginUser(this->email->text());
     } else if (code == 203)
     {
         reg_err1->hide();
@@ -319,7 +356,13 @@ void MainWindow::updateSuccessStatus(int code)
         this->stackedWidget->setCurrentIndex(2);
         page = 2;
     }
+    /* 訊息傳送成功 */
+    else if(code == 201)
+    {
+        simpleChat->chat->isSending = false;
+    }
 }
+
 /* 把登入請求發給後端 */
 void MainWindow::userLogin()
 {
@@ -332,7 +375,7 @@ void MainWindow::userLogin()
     json["data"] = data;
     QJsonDocument doc(json);
     qDebug() << "login";
-    qDebug() << doc.toJson();
+//    qDebug() << doc.toJson();
     webSocket->sendTextMessage(doc.toJson());
 }
 void MainWindow::isUserExist()
@@ -344,13 +387,16 @@ void MainWindow::isUserExist()
     data["email"] = email->text();
     json.insert("data", data);
     QJsonDocument doc(json);
-    qDebug() << doc.toJson();
+//    qDebug() << doc.toJson();
     webSocket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
 }
 /* 當收到後端傳的訊息 */
-void MainWindow::onTextMessageReceived(QString data)
+void MainWindow::onTextMessageReceived(QString str)
 {
-    qDebug() << data;
+    QByteArray byteArray=str.toLocal8Bit ();
+    char *c=byteArray.data();
+    QString data = QString::fromLocal8Bit(c);
+    qDebug() << "get: " << data;
     /* 把 json 字串轉物件 */
     QJsonDocument doc =  QJsonDocument::fromJson(data.toLocal8Bit().data());
     QJsonObject json = doc.object();
@@ -358,6 +404,12 @@ void MainWindow::onTextMessageReceived(QString data)
     /* 是否初次連線所傳的值 */
     if(json["key"].toString() == NULL)
     {
+        /* 收到別人的訊息 */
+        if(json["sender"].toString() != NULL)
+        {
+            writeDatabase(json);
+            simpleChat->chat->drawMessage(json["content"].toString(), json["created_at"].toString(), false);
+        }
         /* code > 10000 為錯誤 */
         if(json["code"].toInt() < 10000)
         {
@@ -367,8 +419,8 @@ void MainWindow::onTextMessageReceived(QString data)
                 /* 查詢使用者成功 */
                 QJsonArray users = json["data"].toArray();
                 simpleChat->FriendList(users);
-
-            } else
+            }
+            else
             {
                 /* 登入註冊成功 */
                 updateSuccessStatus(json["code"].toInt());
@@ -393,10 +445,11 @@ void MainWindow::onConnected()
     this->connected = true;
     connect(webSocket, &QWebSocket::textMessageReceived,
                 this, &MainWindow::onTextMessageReceived);
-    if(isLogin())
+    if(isLogin)
     {
-        stackedWidget->setCurrentIndex(3);
-        page = 3;
+        /* 跳轉到聊天視窗 */
+        stackedWidget->setCurrentIndex(5);
+        page = 5;
     }
     else {
         this->stackedWidget->setCurrentIndex(2);
@@ -407,6 +460,7 @@ void MainWindow::onConnectError(QAbstractSocket::SocketError)
 {
     qDebug("error");
     this->connected = false;
+    isLogin = false;
     errMsg->show();
     this->stackedWidget->setCurrentIndex(1);
 }

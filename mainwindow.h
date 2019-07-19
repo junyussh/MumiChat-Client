@@ -10,6 +10,7 @@
 #include <QtWebSockets/QWebSocket>
 #include <QLineEdit>
 #include <QLabel>
+#include <QtSql>
 #include "chatmainwindow.h"
 #include "chatmessage.h"
 #include "simplechat.h"
@@ -26,6 +27,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    bool isLogin = false;
 
 private slots:
     void showChatWindow();
@@ -41,7 +43,6 @@ private slots:
     void nextRegisterPage();
     void userRegister();
 private:
-    bool isLogin();
     Ui::MainWindow *ui;
     int page = 0;
     bool ws = 0;
@@ -50,6 +51,9 @@ private:
     void sendMessage(QString);
     void updateErrorStatus(int);
     void updateSuccessStatus(int);
+    void writeDatabase(QJsonObject);
+    void initDatabase();
+    QSqlDatabase db;
     QWebSocket *webSocket;
     QWidget *centralWidget;
     QStackedWidget *stackedWidget;
