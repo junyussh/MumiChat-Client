@@ -55,6 +55,7 @@ private:
 //    void keyPressEvent(QKeyEvent *e);
     void loadMessage();
     void writeDatabase(QString);
+    void resizeEvent(QResizeEvent *event);
 };
 
 #endif // SIMPLECHAT_H

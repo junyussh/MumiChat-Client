@@ -34,6 +34,15 @@
           <height>65</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>Adobe Arabic</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">padding-left: 1em;</string>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>

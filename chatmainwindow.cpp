@@ -229,8 +229,12 @@ void CHATMainWindow::clearMessage()
 void CHATMainWindow::hideWidget()
 {
     ui->widget->hide();
+    ui->label->hide();
+    ui->label_tip->show();
 }
 void CHATMainWindow::showWidget()
 {
     ui->widget->show();
+    ui->label->show();
+    ui->label_tip->hide();
 }

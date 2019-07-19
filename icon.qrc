@@ -27,5 +27,6 @@
         <file>icon/background/default_3.png</file>
         <file>icon/menu1.png</file>
         <file>icon/menu2.png</file>
+        <file>icon/user.png</file>
     </qresource>
 </RCC>

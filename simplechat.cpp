@@ -22,7 +22,11 @@ SimpleChat::SimpleChat(QWidget *parent) :
     connect(chat, SIGNAL(sendMessage(QString)), this, SLOT(sendMessage(QString)));
     int startX = ui->UserList->x()+ui->UserList->width();
     int startY = ui->UserList->y()-ui->Name->height();
-    chat->setGeometry(273, 64, 518, 481);
+    ui->attachment->hide();
+
+    int width = ui->listWidget->width();
+    int height = ui->listWidget->height()+ui->MessageBox->height();
+    chat->setGeometry(271, 66, width, height);
     chat->show();
     chat->hideWidget();
 }
@@ -110,6 +114,7 @@ void SimpleChat::showEvent(QShowEvent *)
 
     ui->Profile->setPixmap(pix.scaled(ui->Profile->size(),Qt::KeepAspectRatio));
 }
+/* 獲取所有使用者 */
 void SimpleChat::getUserList()
 {
     QJsonObject json;
@@ -172,6 +177,12 @@ void SimpleChat::writeDatabase(QString message)
             .arg(time);
     qDebug() << message;
     insertQuery.exec(sql);
+}
+void SimpleChat::resizeEvent(QResizeEvent *event)
+{
+    int width = ui->listWidget->width();
+    int height = ui->listWidget->height()+ui->MessageBox->height();
+    chat->setGeometry(270, 63, width, height);
 }
 SimpleChat::~SimpleChat()
 {
