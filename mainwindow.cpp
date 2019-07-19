@@ -346,6 +346,7 @@ void MainWindow::updateSuccessStatus(int code)
         this->stackedWidget->setCurrentIndex(5);
         page = 5;
         isLogin = true;
+        qDebug() << "email: " << this->email->text();
         simpleChat->setLoginUser(this->email->text());
     } else if (code == 203)
     {
@@ -391,14 +392,14 @@ void MainWindow::isUserExist()
     webSocket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
 }
 /* 當收到後端傳的訊息 */
-void MainWindow::onTextMessageReceived(QString str)
+void MainWindow::onTextMessageReceived(QString data)
 {
-    QByteArray byteArray=str.toLocal8Bit ();
-    char *c=byteArray.data();
-    QString data = QString::fromLocal8Bit(c);
+//    QByteArray byteArray=str.toLocal8Bit ();
+//    char *c=byteArray.data();
+//    QString data = QString::fromLocal8Bit(c);
     qDebug() << "get: " << data;
     /* 把 json 字串轉物件 */
-    QJsonDocument doc =  QJsonDocument::fromJson(data.toLocal8Bit().data());
+    QJsonDocument doc =  QJsonDocument::fromJson(data.toUtf8().data());
     QJsonObject json = doc.object();
 
     /* 是否初次連線所傳的值 */

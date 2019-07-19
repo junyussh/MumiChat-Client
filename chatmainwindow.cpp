@@ -226,3 +226,11 @@ void CHATMainWindow::clearMessage()
 {
     ui->listWidget->clear();
 }
+void CHATMainWindow::hideWidget()
+{
+    ui->widget->hide();
+}
+void CHATMainWindow::showWidget()
+{
+    ui->widget->show();
+}

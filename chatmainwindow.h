@@ -27,6 +27,8 @@ public:
     void drawMessage(QString msg, QString time, bool isMe);
     void getMessage(QString currentUser, QString selectUser);
     void clearMessage();
+    void hideWidget();
+    void showWidget();
 protected:
     void resizeEvent(QResizeEvent *event);
     void keyPressEvent(QKeyEvent *event); // 按數字鍵盤和鍵盤的 Enter鍵事件

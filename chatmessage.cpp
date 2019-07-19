@@ -10,7 +10,7 @@
 QNChatMessage::QNChatMessage(QWidget *parent) : QWidget(parent)
 {
     QFont te_font = this->font();
-    te_font.setFamily("MicrosoftYaHei");
+    te_font.setFamily("Arial");
     te_font.setPointSize(12);
     //    te_font.setWordSpacing(0);
     //    te_font.setLetterSpacing(QFont::PercentageSpacing,0);

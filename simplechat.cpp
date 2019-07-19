@@ -24,6 +24,7 @@ SimpleChat::SimpleChat(QWidget *parent) :
     int startY = ui->UserList->y()-ui->Name->height();
     chat->setGeometry(273, 64, 518, 481);
     chat->show();
+    chat->hideWidget();
 }
 //void SimpleChat::keyPressEvent(QKeyEvent *event)
 //{
@@ -41,6 +42,7 @@ void SimpleChat::sendMessage(QString message)
     json["data"] = data;
     writeDatabase(message);
     QJsonDocument doc(json);
+    qDebug() << "send: " << doc.toJson(QJsonDocument::Compact);
     socket->sendTextMessage(doc.toJson(QJsonDocument::Compact));
     ui->MessageBox->clear();
 }
@@ -58,6 +60,7 @@ void SimpleChat::listClicked(QModelIndex index)
         loadMessage();
     }
     qDebug() << "current userid: " << currentUserID;
+    chat->showWidget();
 }
 /* 載入訊息 */
 void SimpleChat::loadMessage()
@@ -92,6 +95,7 @@ void SimpleChat::setSocket(QWebSocket *socket)
 {
     this->socket = socket;
 }
+/* 當顯示畫面時的事件 */
 void SimpleChat::showEvent(QShowEvent *)
 {
 //    ui->UserList->removeAl
@@ -99,7 +103,12 @@ void SimpleChat::showEvent(QShowEvent *)
     this->getUserList();
     m_delegate = new ItemDelegate(this);
     ui->UserList->setItemDelegate(m_delegate);
-//    chat->clearMessage();
+    qDebug() << loginUser;
+    ui->Username->setText(loginUser);
+    qDebug() << "set done";
+    QPixmap pix = QPixmap(":/images/icon/CustomerCopy.png");
+
+    ui->Profile->setPixmap(pix.scaled(ui->Profile->size(),Qt::KeepAspectRatio));
 }
 void SimpleChat::getUserList()
 {
