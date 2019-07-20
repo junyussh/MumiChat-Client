@@ -28,5 +28,6 @@
         <file>icon/menu1.png</file>
         <file>icon/menu2.png</file>
         <file>icon/user.png</file>
+        <file>icon/app.ico</file>
     </qresource>
 </RCC>

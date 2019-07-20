@@ -94,7 +94,7 @@ void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
         QRect telRect = QRect(avatarRect.right() +10, rect.bottom()-25, rect.width()-10, 20);
 
 
-        painter->drawPixmap(avatarRect, QPixmap(":/images/icon/CustomerCopy.png"));
+        painter->drawPixmap(avatarRect, QPixmap(":/images/icon/user.png"));
         /*
         switch (status) {
         case S_RED:

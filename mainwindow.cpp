@@ -342,6 +342,7 @@ void MainWindow::updateSuccessStatus(int code)
     /* 登入成功 */
     if(code == 202)
     {
+        this->setWindowTitle(this->email->text());
         /* 跳到聊天界面 */
         this->stackedWidget->setCurrentIndex(5);
         page = 5;

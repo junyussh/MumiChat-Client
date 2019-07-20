@@ -7,6 +7,7 @@
 QT       += core gui websockets
 QT += sql
 
+RC_ICONS = icon/app.ico
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = MumiChat-client
